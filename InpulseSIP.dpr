@@ -38,7 +38,27 @@ begin
   Result := TSipPhoneForm.Status(pParam);
 end;
 
+function Transferir(pParam: WideString): WideString; stdcall;
+begin
+  Result := TSipPhoneForm.Transferir(pParam);
+end;
+
+function AutoFalante(pParam: WideString): WideString; stdcall;
+begin
+  Result := TSipPhoneForm.AutoFalante(pParam);
+end;
+
+function MicroFone(pParam: WideString): WideString; stdcall;
+begin
+  Result := TSipPhoneForm.MicroFone(pParam);
+end;
+
+function SetCaminhoSalvar(pParam: WideString): WideString; stdcall;
+begin
+  Result := TSipPhoneForm.SetCaminhoSalvar(pParam);
+end;
+
 exports
-  Ligar, Inicializar, Finalizar, Desligar, Status;
+  Ligar, Inicializar, Finalizar, Desligar, Status, Transferir, AutoFalante, MicroFone, SetCaminhoSalvar;
 begin
 end.
