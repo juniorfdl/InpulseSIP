@@ -79,7 +79,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <Debugger_HostApplication>C:\sgr\Project2.exe</Debugger_HostApplication>
+        <Debugger_HostApplication>C:\sgr\sgr.exe</Debugger_HostApplication>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_ExeOutput>c:\sgr</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>

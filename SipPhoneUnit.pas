@@ -2,11 +2,12 @@ unit SipPhoneUnit;
 
 interface
 
-
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, OleCtrls, ShellAPI,
-  StdCtrls, ComCtrls, jpeg, Menus, ExtCtrls, ComObj, AxCtrls, ActiveX, Generics.Collections,
-    //TransferFormUnit,  JoinFormUnit, ActivationFormUnit, SendTextFormUnit,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, OleCtrls, ShellAPI,
+  StdCtrls, ComCtrls, jpeg, Menus, ExtCtrls, ComObj, AxCtrls, ActiveX,
+  Generics.Collections,
+  // TransferFormUnit,  JoinFormUnit, ActivationFormUnit, SendTextFormUnit,
   SIPVoipSDK_TLB, System.Json;
 
 const
@@ -14,8 +15,9 @@ const
 
 type
   PLineInfo = ^TLineInfo;
+
   TLineInfo = record
-    Connections: TDictionary < integer, string > ;
+    Connections: TDictionary<Integer, string>;
     Id: Integer;
     IsCallEstablished: Boolean;
     IsCallHeld: Boolean;
@@ -111,33 +113,37 @@ type
     procedure DTFMHashClick(Sender: TObject);
     procedure PlayButtonClick(Sender: TObject);
 
- { event handlers }
+    { event handlers }
     procedure AbtoPhone_OnInitialized(ASender: TObject; const Msg: WideString);
     procedure AbtoPhone_OnLineSwitched(Sender: TObject; LineId: Integer);
-    procedure AbtoPhone_OnEstablishedCall(ASender: TObject; const Msg: WideString; LineId: Integer);
-    procedure AbtoPhone_OnIncomingCall(ASender: TObject; const AddrFrom: WideString; LineId: Integer);
-    procedure AbtoPhone_OnClearedCall(ASender: TObject; const Msg: WideString; Status: Integer; LineId: Integer);
-    procedure AbtoPhone_OnVolumeUpdated(Sender: TObject; IsMicrophone: Integer; Level: Integer);
+    procedure AbtoPhone_OnEstablishedCall(ASender: TObject;
+      const Msg: WideString; LineId: Integer);
+    procedure AbtoPhone_OnIncomingCall(ASender: TObject;
+      const AddrFrom: WideString; LineId: Integer);
+    procedure AbtoPhone_OnClearedCall(ASender: TObject; const Msg: WideString;
+      Status: Integer; LineId: Integer);
+    procedure AbtoPhone_OnVolumeUpdated(Sender: TObject; IsMicrophone: Integer;
+      Level: Integer);
     procedure AbtoPhone_OnRegistered(ASender: TObject; const Msg: WideString);
     procedure AbtoPhone_OnPlayFinished(ASender: TObject; const Msg: WideString);
-    procedure AbtoPhone_OnEstablishedConnection(ASender: TObject; const AddrFrom: WideString;
-      const AddrTo: WideString;
-      ConnId: Integer;
+    procedure AbtoPhone_OnEstablishedConnection(ASender: TObject;
+      const AddrFrom: WideString; const AddrTo: WideString; ConnId: Integer;
       LineId: Integer);
-    procedure AbtoPhone_OnClearedConnection(Sender: TObject; ConnId: Integer; LineId: Integer);
-    procedure AbtoPhone_OnToneReceived(ASender: TObject; Tone: Integer; ConnId: Integer;
+    procedure AbtoPhone_OnClearedConnection(Sender: TObject; ConnId: Integer;
       LineId: Integer);
-    procedure AbtoPhone_OnTextMessageReceived(ASender: TObject; const address: WideString;
-      const message: WideString);
+    procedure AbtoPhone_OnToneReceived(ASender: TObject; Tone: Integer;
+      ConnId: Integer; LineId: Integer);
+    procedure AbtoPhone_OnTextMessageReceived(ASender: TObject;
+      const address: WideString; const message: WideString);
     procedure AbtoPhone_OnNotify(ASender: TObject; const Msg: WideString);
-    procedure AbtoPhone_OnRemoteAlerting(ASender: TObject;
-      ConnId: Integer; responseCode: Integer;
-      const reasonMsg: WideString);
-    procedure AbtoPhone_OnHoldCall(ASender: TObject; LineId: Integer; isHeld: Integer);
+    procedure AbtoPhone_OnRemoteAlerting(ASender: TObject; ConnId: Integer;
+      responseCode: Integer; const reasonMsg: WideString);
+    procedure AbtoPhone_OnHoldCall(ASender: TObject; LineId: Integer;
+      isHeld: Integer);
 
-    procedure AbtoPhone_OnTextMessageSentStatus(ASender: TObject; const address: WideString;
-      const reason: WideString; bSuccess: Integer);
- { form event handlers }
+    procedure AbtoPhone_OnTextMessageSentStatus(ASender: TObject;
+      const address: WideString; const reason: WideString; bSuccess: Integer);
+    { form event handlers }
     procedure HoldButtonClick(Sender: TObject);
     procedure RecButtonClick(Sender: TObject);
     procedure TransferButtonClick(Sender: TObject);
@@ -146,13 +152,13 @@ type
     procedure SendTextButtonClick(Sender: TObject);
 
   private
- { Private declarations }
+    { Private declarations }
 
     configFileName, CaminhoSalvar: string;
     RegistrarAttemptNumber: Integer;
 
-    LineButtons: array[1..6] of TButton;
- (*AudioPlaybackDevices, AudioRecordDevices: TStringList;*)
+    LineButtons: array [1 .. 6] of TButton;
+    (* AudioPlaybackDevices, AudioRecordDevices: TStringList; *)
     AbtoPhone: TCAbtoPhone;
     LinesTbl: TList;
     CurrentLineId: Integer;
@@ -163,17 +169,18 @@ type
     procedure setStatus(const Value: WideString);
     property fStatus: WideString read getStatus write setStatus;
     procedure DisplayNotifyMessage(message: string);
-    procedure DisplayConnection(connId: Integer; RemoteAddress: string);
+    procedure DisplayConnection(ConnId: Integer; RemoteAddress: string);
     procedure DisplayConnectionsAll(lnInfo: PLineInfo);
-    procedure RemoveConnection(connId: Integer);
+    procedure RemoveConnection(ConnId: Integer);
     procedure DecorateLineButton(button: Integer);
     function GetCurrentLine: PLineInfo;
-    function GetLine(lineId: Integer): PLineInfo;
-    function GetSelectedConnection(var connId: Integer): Boolean;
+    function GetLine(LineId: Integer): PLineInfo;
+    function GetSelectedConnection(var ConnId: Integer): Boolean;
     procedure ChangeControlsState(lnInfo: PLineInfo);
     procedure ChangeLineCaption(lnInfo: PLineInfo);
-    function GetLineButton(lineId: Integer): TButton;
-    procedure StopStartPlaying(isCalledByPlayFinishedEvent: Boolean; lineId: integer);
+    function GetLineButton(LineId: Integer): TButton;
+    procedure StopStartPlaying(isCalledByPlayFinishedEvent: Boolean;
+      LineId: Integer);
     procedure SetupLineButton(number: Integer);
 
   public
@@ -183,10 +190,12 @@ type
     class function Finalizar(pConf: WideString): WideString;
     class function Desligar(pParam: WideString): WideString;
     class function Status(pParam: WideString): WideString;
-    class function Transferir(pFone:WideString): WideString;
+    class function Transferir(pFone: WideString): WideString;
     class function AutoFalante(pParam: WideString): WideString;
     class function MicroFone(pParam: WideString): WideString;
     class function SetCaminhoSalvar(pParam: WideString): WideString;
+    class function SendTone(pTecla: WideString): WideString;
+    class function Esperar(pTecla: WideString): WideString;
   end;
 
 var
@@ -194,11 +203,10 @@ var
 
 implementation
 
-{uses AboutFormUnit, IncomingFormUnit;}
+{ uses AboutFormUnit, IncomingFormUnit; }
 
 {$R *.dfm}
 {$R WindowsXP.res}
-
 /// Inicio funções external
 ///
 
@@ -207,139 +215,198 @@ begin
   SipPhoneForm.CaminhoSalvar := pParam;
 end;
 
-class function TSipPhoneForm.AutoFalante(pParam:WideString): WideString;
+class function TSipPhoneForm.AutoFalante(pParam: WideString): WideString;
 var
   JSONValue: TJSONValue;
-  vMudo:Boolean;
-  vVolume:Integer;
+  vMudo: Boolean;
+  vVolume: Integer;
 begin
-  result := '0';
+  try
+    result := '0';
 
-  JSONValue := TJSONObject.ParseJSONValue(pParam);
+    JSONValue := TJSONObject.ParseJSONValue(pParam);
 
-  if JSONVAlue is TJSONObject then
-  begin
-    vMudo := JSONValue.GetValue<Boolean>('Mudo');
-    vVolume := JSONValue.GetValue<Integer>('Volume');
+    if JSONValue is TJSONObject then
+    begin
+      vMudo := JSONValue.GetValue<Boolean>('Mudo');
+      vVolume := JSONValue.GetValue<Integer>('Volume');
 
-    SipPhoneForm.AbtoPhone.PlaybackVolume := vVolume;
+      SipPhoneForm.AbtoPhone.PlaybackVolume := vVolume;
 
-    if vMudo then
-      SipPhoneForm.AbtoPhone.PlaybackMuted := 0
-    else
-      SipPhoneForm.AbtoPhone.PlaybackMuted := 1;
+      if vMudo then
+        SipPhoneForm.AbtoPhone.PlaybackMuted := 0
+      else
+        SipPhoneForm.AbtoPhone.PlaybackMuted := 1;
+    end;
+
+    result := '1';
+  except
+    on E: Exception do
+    begin
+      Status('{"Evento": "Erro", "Msg":"' + E.message + '", "Time":"' +
+        TimeToStr(Now) + '" }');
+    end;
   end;
-
-  result := '1';
 end;
 
-class function TSipPhoneForm.MicroFone(pParam:WideString): WideString;
+class function TSipPhoneForm.MicroFone(pParam: WideString): WideString;
 var
   JSONValue: TJSONValue;
-  vMudo:Boolean;
-  vVolume:Integer;
+  vMudo: Boolean;
+  vVolume: Integer;
 begin
-  result := '0';
+  try
+    result := '0';
 
-  JSONValue := TJSONObject.ParseJSONValue(pParam);
+    JSONValue := TJSONObject.ParseJSONValue(pParam);
 
-  if JSONVAlue is TJSONObject then
-  begin
-    vMudo := JSONValue.GetValue<Boolean>('Mudo');
-    vVolume := JSONValue.GetValue<Integer>('Volume');
+    if JSONValue is TJSONObject then
+    begin
+      vMudo := JSONValue.GetValue<Boolean>('Mudo');
+      vVolume := JSONValue.GetValue<Integer>('Volume');
 
-    SipPhoneForm.AbtoPhone.RecordVolume := vVolume;
+      SipPhoneForm.AbtoPhone.RecordVolume := vVolume;
 
-    if vMudo then
-      SipPhoneForm.AbtoPhone.RecordMuted := 0
-    else
-      SipPhoneForm.AbtoPhone.RecordMuted := 1;
+      if vMudo then
+        SipPhoneForm.AbtoPhone.RecordMuted := 0
+      else
+        SipPhoneForm.AbtoPhone.RecordMuted := 1;
+    end;
+
+    result := '1';
+  except
+    on E: Exception do
+    begin
+      Status('{"Evento": "Erro", "Msg":"' + E.message + '", "Time":"' +
+        TimeToStr(Now) + '" }');
+    end;
   end;
-
-  result := '1';
 end;
 
-class function TSipPhoneForm.Transferir(pFone:WideString): WideString;
+class function TSipPhoneForm.Transferir(pFone: WideString): WideString;
 begin
-  result := '0';
-  SipPhoneForm.AbtoPhone.TransferCall(pFone);
-  result := '1';
+  try
+    result := '0';
+    SipPhoneForm.AbtoPhone.TransferCall(pFone);
+    result := '1';
+  except
+    on E: Exception do
+    begin
+      Status('{"Evento": "Erro", "Msg":"' + E.message + '", "Time":"' +
+        TimeToStr(Now) + '" }');
+    end;
+  end;
 end;
 
 class function TSipPhoneForm.Status(pParam: WideString): WideString;
 begin
   if SipPhoneForm <> nil then
-    Result := SipPhoneForm.fStatus
+    result := SipPhoneForm.fStatus
   else
-    Result := '{"Evento": "OFFLine", "Msg":"Não Iniciado", "Time":"' + TimeToStr(Now) + '" }';
+    result := '{"Evento": "OFFLine", "Msg":"Não Iniciado", "Time":"' +
+      TimeToStr(Now) + '" }';
 end;
 
 class function TSipPhoneForm.Finalizar(pConf: WideString): WideString;
 begin
-  result := '0';
-  if SipPhoneForm <> nil then
-  begin
-    FreeAndNil(SipPhoneForm);
-    SipPhoneForm := nil;
+  try
+    result := '0';
+    if SipPhoneForm <> nil then
+    begin
+      FreeAndNil(SipPhoneForm);
+      SipPhoneForm := nil;
+    end;
+    result := '1';
+  except
+    on E: Exception do
+    begin
+      Status('{"Evento": "Erro", "Msg":"' + E.message + '", "Time":"' +
+        TimeToStr(Now) + '" }');
+    end;
   end;
-  result := '1';
 end;
 
 class function TSipPhoneForm.Desligar(pParam: WideString): WideString;
 var
   lnInfo: PLineInfo;
-  connId: Integer;
+  ConnId: Integer;
 begin
-  result := '0';
-  lnInfo := SipPhoneForm.GetCurrentLine;
+  try
+    result := '0';
+    lnInfo := SipPhoneForm.GetCurrentLine;
 
-  if lnInfo.IsCallEstablished or lnInfo.IsCalling then
-  begin
-    if SipPhoneForm.GetSelectedConnection(connId) then
-      SipPhoneForm.AbtoPhone.HangUp(connId)
-    else
-      SipPhoneForm.AbtoPhone.HangUpLastCall;
+    if lnInfo.IsCallEstablished or lnInfo.IsCalling then
+    begin
+      if SipPhoneForm.GetSelectedConnection(ConnId) then
+        SipPhoneForm.AbtoPhone.HangUp(ConnId)
+      else
+        SipPhoneForm.AbtoPhone.HangUpLastCall;
+    end;
+
+    result := '1';
+  except
+    on E: Exception do
+    begin
+      Status('{"Evento": "Erro", "Msg":"' + E.message + '", "Time":"' +
+        TimeToStr(Now) + '" }');
+    end;
   end;
-
-  result := '1';
 end;
 
 class function TSipPhoneForm.Ligar(pParam: WideString): WideString;
 var
   lnInfo: PLineInfo;
-  idx:Integer;
+  idx: Integer;
   JSONValue: TJSONValue;
-  pFone:String;
+  pFone: String;
 begin
-  JSONValue := TJSONObject.ParseJSONValue(pParam);
-  pFone  := JSONValue.GetValue<String>('Fone');
+  try
+    JSONValue := TJSONObject.ParseJSONValue(pParam);
+    pFone := JSONValue.GetValue<String>('Fone');
 
-  result := '0';
-  if pFone = '' then Exit;
+    result := '0';
+    if pFone = '' then
+      Exit;
 
-  lnInfo := SipPhoneForm.GetCurrentLine;
+    lnInfo := SipPhoneForm.GetCurrentLine;
 
-  idx := SipPhoneForm.AddressComboBox.Items.IndexOf(pFone);
-  if idx = -1 then
-    SipPhoneForm.AddressComboBox.Items.Add(pFone);
+    idx := SipPhoneForm.AddressComboBox.Items.IndexOf(pFone);
+    if idx = -1 then
+      SipPhoneForm.AddressComboBox.Items.Add(pFone);
 
-  lnInfo.IsCalling := true;
-  SipPhoneForm.AbtoPhone.StartCall(pFone);
-  result := '1';
+    lnInfo.IsCalling := true;
+    SipPhoneForm.AbtoPhone.StartCall(pFone);
+    result := '1';
+
+  except
+    on E: Exception do
+    begin
+      Status('{"Evento": "Erro", "Msg":"' + E.message + '", "Time":"' +
+        TimeToStr(Now) + '" }');
+    end;
+  end;
 end;
 
 class function TSipPhoneForm.Inicializar(pConf: WideString): WideString;
 begin
-  result := '0';
-  if SipPhoneForm = nil then
-    SipPhoneForm := TSipPhoneForm.Create(nil);
-  result := '1';
+  try
+    result := '0';
+    if SipPhoneForm = nil then
+      SipPhoneForm := TSipPhoneForm.Create(nil);
+    result := '1';
+  except
+    on E: Exception do
+    begin
+      Status('{"Evento": "Erro", "Msg":"' + E.message + '", "Time":"' +
+        TimeToStr(Now) + '" }');
+    end;
+  end;
 end;
 /// Fim funções external
 
 procedure TSipPhoneForm.FormCreate(Sender: TObject);
 var
-  I: integer;
+  I: Integer;
   lnInfo: PLineInfo;
   phoneCfg: Variant;
 begin
@@ -357,34 +424,32 @@ begin
     phoneCfg.Store(configFileName);
   end;
 
-    {Note: Uncomment following lines if needed}
+  { Note: Uncomment following lines if needed }
 
-    //Log level
-    //phoneCfg.LogLevel := LogLevelType.eLogDebug;//eLogError
+  // Log level
+  // phoneCfg.LogLevel := LogLevelType.eLogDebug;//eLogError
 
-    //Set AdditionalDnsServer as google dns
-    //phoneCfg.AdditionalDnsServer := '8.8.8.8';
+  // Set AdditionalDnsServer as google dns
+  // phoneCfg.AdditionalDnsServer := '8.8.8.8';
 
-    //Specify network interface
-    //phoneCfg.ActiveNetworkDevice := '';
+  // Specify network interface
+  // phoneCfg.ActiveNetworkDevice := '';
 
-    //Specify Licensy key
-    //phoneCfg.LicenseUserId := '...';
-    //phoneCfg.LicenseKey    := '...';
+  // Specify Licensy key
+  // phoneCfg.LicenseUserId := '...';
+  // phoneCfg.LicenseKey    := '...';
 
-     //Set video windows
+  // Set video windows
   phoneCfg.RemoteVideoWindow := pictureReceivedVideo.Handle;
   phoneCfg.LocalVideoWindow := pictureLocalVideo.Handle;
 
-
-  AbtoPhone.ApplyConfig; //Apply modified config
+  AbtoPhone.ApplyConfig; // Apply modified config
 
   DisplayNotifyMessage('Initializing...');
   try
-    AbtoPhone.Initialize; //Initialize component
+    AbtoPhone.Initialize; // Initialize component
   except
   end;
-
 
   Self.AbtoPhone.OnInitialized := AbtoPhone_OnInitialized;
   Self.AbtoPhone.OnLineSwiched := AbtoPhone_OnLineSwitched;
@@ -403,11 +468,13 @@ begin
   Self.AbtoPhone.OnHoldCall := AbtoPhone_OnHoldCall;
   Self.AbtoPhone.OnTextMessageSentStatus := AbtoPhone_OnTextMessageSentStatus;
 
-  for I := 1 to LineCount do begin
+  for I := 1 to LineCount do
+  begin
     New(lnInfo);
-    with lnInfo^ do begin
-      Id := i;
-      Connections := TDictionary < integer, string > .Create;
+    with lnInfo^ do
+    begin
+      Id := I;
+      Connections := TDictionary<Integer, string>.Create;
       IsCallEstablished := False;
       IsCallHeld := False;
       IsCallPlayStarted := False;
@@ -418,8 +485,7 @@ begin
     Self.LinesTbl.Add(lnInfo);
   end;
 
-
-  StartCallBtn.Default := True;
+  StartCallBtn.Default := true;
 
   LineButtons[1] := Line1Button;
   LineButtons[2] := Line2Button;
@@ -440,7 +506,7 @@ end;
 procedure TSipPhoneForm.StartCallBtnClick(Sender: TObject);
 var
   lnInfo: PLineInfo;
-  connId: Integer;
+  ConnId: Integer;
   address: string;
   idx: Integer;
 begin
@@ -448,28 +514,30 @@ begin
 
   if lnInfo.IsCallEstablished or lnInfo.IsCalling then
   begin
-    if GetSelectedConnection(connId) then
-      AbtoPhone.HangUp(connId)
+    if GetSelectedConnection(ConnId) then
+      AbtoPhone.HangUp(ConnId)
     else
       AbtoPhone.HangUpLastCall;
   end
   else
   begin
     address := AddressComboBox.Text;
-    if address = '' then Exit;
+    if address = '' then
+      Exit;
 
-      //Append addr to combo
+    // Append addr to combo
     idx := Self.AddressComboBox.Items.IndexOf(address);
-    if idx = -1 then Self.AddressComboBox.Items.Add(address);
+    if idx = -1 then
+      Self.AddressComboBox.Items.Add(address);
 
-      //Set status
+    // Set status
     DisplayNotifyMessage('Calling ' + address + '...');
 
-      //Set flag
+    // Set flag
     lnInfo.IsCalling := true;
     ChangeControlsState(lnInfo);
 
-      //Start call
+    // Start call
     AbtoPhone.StartCall(address);
   end;
 end;
@@ -491,26 +559,29 @@ end;
 
 procedure TSipPhoneForm.SpeakerVolumeBoxClick(Sender: TObject);
 begin
-  if SpeakerVolumeBox.Checked
-    then AbtoPhone.PlaybackMuted := 0
-  else AbtoPhone.PlaybackMuted := 1;
+  if SpeakerVolumeBox.Checked then
+    AbtoPhone.PlaybackMuted := 0
+  else
+    AbtoPhone.PlaybackMuted := 1;
 end;
 
 procedure TSipPhoneForm.MicrophoneVolumeBoxClick(Sender: TObject);
 begin
-  if MicrophoneVolumeBox.Checked
-    then AbtoPhone.RecordMuted := 0
-  else AbtoPhone.RecordMuted := 1;
+  if MicrophoneVolumeBox.Checked then
+    AbtoPhone.RecordMuted := 0
+  else
+    AbtoPhone.RecordMuted := 1;
 end;
 
 procedure TSipPhoneForm.DecorateLineButton(button: Integer);
 var
-  i: integer;
+  I: Integer;
 begin
-  for i := 1 to 6 do begin
-    LineButtons[i].Font.Style := [];
+  for I := 1 to 6 do
+  begin
+    LineButtons[I].Font.Style := [];
   end;
-  LineButtons[button].font.style := [fsBold];
+  LineButtons[button].Font.Style := [fsBold];
 end;
 
 procedure TSipPhoneForm.SetupLineButton(number: Integer);
@@ -519,7 +590,6 @@ begin
   Self.CurrentLineId := number;
   AbtoPhone.SetCurrentLine(number);
 end;
-
 
 procedure TSipPhoneForm.Line1ButtonClick(Sender: TObject);
 begin
@@ -552,55 +622,53 @@ begin
 end;
 
 procedure TSipPhoneForm.AboutMenuClick(Sender: TObject);
-//var
-//    about : TAboutForm;
+// var
+// about : TAboutForm;
 begin
-//    Application.CreateForm(TAboutForm, about);
-//    about.ShowModal;
-//    about.Free;
+  // Application.CreateForm(TAboutForm, about);
+  // about.ShowModal;
+  // about.Free;
 end;
 
 procedure TSipPhoneForm.SettingsMenuClick(Sender: TObject);
-//var
-//    settingsForm: TSettingsForm;
-//    phoneCfg : Variant;
+// var
+// settingsForm: TSettingsForm;
+// phoneCfg : Variant;
 begin
-    {Application.CreateForm(TSettingsForm, settingsForm);
+  { Application.CreateForm(TSettingsForm, settingsForm);
 
     phoneCfg := AbtoPhone.Config;
     settingsForm.SetSettings(phoneCfg, AbtoPhone.RetrieveVersion, AbtoPhone.RetrieveExternalAddress);
 
     settingsForm.ShowModal;
     if settingsForm.ModalResult = mrOk then begin
-        settingsForm.SetupUserInput;
-        AbtoPhone.ApplyConfig;
-        phoneCfg.Store(configFileName);
+    settingsForm.SetupUserInput;
+    AbtoPhone.ApplyConfig;
+    phoneCfg.Store(configFileName);
     end;
     isAutoAnswerEnabled := phoneCfg.AutoAnswerEnabled;
 
-    settingsForm.Free;}
+    settingsForm.Free; }
 end;
 
-
 procedure TSipPhoneForm.ActivationMenuClick(Sender: TObject);
-//var
-//    activationForm: TActivationForm;
-//    phoneCfg : Variant;
+// var
+// activationForm: TActivationForm;
+// phoneCfg : Variant;
 begin
-  {  Application.CreateForm(TActivationForm, activationForm);
+  { Application.CreateForm(TActivationForm, activationForm);
 
     activationForm.ShowModal;
     if activationForm.ModalResult = mrOk then begin
-        phoneCfg := AbtoPhone.Config;
-        activationForm.GetKeys(phoneCfg);
+    phoneCfg := AbtoPhone.Config;
+    activationForm.GetKeys(phoneCfg);
 
-        phoneCfg.Store(configFileName);
+    phoneCfg.Store(configFileName);
 
-        Application.Messagebox('Restart application for finalize activation.', 'Activation');
+    Application.Messagebox('Restart application for finalize activation.', 'Activation');
     end;
-    activationForm.Free;}
+    activationForm.Free; }
 end;
-
 
 procedure TSipPhoneForm.DTFM1Click(Sender: TObject);
 begin
@@ -652,6 +720,21 @@ begin
   AbtoPhone.SendTone('*');
 end;
 
+class function TSipPhoneForm.Esperar(pTecla: WideString): WideString;
+begin
+  try
+    result := '0';
+    SipPhoneForm.HoldButtonClick(SipPhoneForm.HoldButton);
+    result := '1';
+  except
+    on E: Exception do
+    begin
+      Status('{"Evento": "Erro", "Msg":"' + E.message + '", "Time":"' +
+        TimeToStr(Now) + '" }');
+    end;
+  end;
+end;
+
 procedure TSipPhoneForm.DTFM0Click(Sender: TObject);
 begin
   AbtoPhone.SendTone('0');
@@ -664,37 +747,39 @@ end;
 
 function TSipPhoneForm.GetCurrentLine: PLineInfo;
 begin
-  Result := Self.LinesTbl.Items[Self.CurrentLineId - 1];
+  result := Self.LinesTbl.Items[Self.CurrentLineId - 1];
 end;
 
-function TSipPhoneForm.GetLine(lineId: Integer): PLineInfo;
+function TSipPhoneForm.GetLine(LineId: Integer): PLineInfo;
 begin
-  Result := Self.LinesTbl.Items[lineId - 1];
+  result := Self.LinesTbl.Items[LineId - 1];
 end;
 
-function TSipPhoneForm.GetSelectedConnection(var connId: Integer): Boolean;
+function TSipPhoneForm.GetSelectedConnection(var ConnId: Integer): Boolean;
 var
   count: Integer;
   selIndex: Integer;
 begin
-  connId := 0;
-  count := ConnectionsListBox.Count;
+  ConnId := 0;
+  count := ConnectionsListBox.count;
   if count = 0 then
     GetSelectedConnection := False
-  else begin
+  else
+  begin
     selIndex := ConnectionsListBox.ItemIndex;
-    if selIndex = -1 then selIndex := count - 1;
-    connId := Integer(ConnectionsListBox.Items.Objects[selIndex]);
-    GetSelectedConnection := True;
+    if selIndex = -1 then
+      selIndex := count - 1;
+    ConnId := Integer(ConnectionsListBox.Items.Objects[selIndex]);
+    GetSelectedConnection := true;
   end;
 end;
-
 
 function TSipPhoneForm.getStatus: WideString;
 begin
   if ffTimeStatusAnterior = ffTimeStatus then
     result := ''
-  else begin
+  else
+  begin
     result := ffStatus;
     ffTimeStatusAnterior := ffTimeStatus;
   end;
@@ -702,26 +787,29 @@ end;
 
 procedure TSipPhoneForm.PlayButtonClick(Sender: TObject);
 begin
-  stopStartPlaying(False, Self.CurrentLineId);
+  StopStartPlaying(False, Self.CurrentLineId);
 end;
 
-procedure TSipPhoneForm.StopStartPlaying(isCalledByPlayFinishedEvent: Boolean; LineId: integer);
+procedure TSipPhoneForm.StopStartPlaying(isCalledByPlayFinishedEvent: Boolean;
+  LineId: Integer);
 var
   lnInfo: PLineInfo;
   succeded: Integer;
 begin
   lnInfo := Self.GetLine(LineId);
-  if (isCalledByPlayFinishedEvent) and (not lnInfo.IsCallPlayStarted)
-    then Exit;
+  if (isCalledByPlayFinishedEvent) and (not lnInfo.IsCallPlayStarted) then
+    Exit;
 
   if lnInfo.IsCallPlayStarted then
   begin
     AbtoPhone.StopPlayback;
     PlayButton.Caption := 'Play';
-  end else
+  end
+  else
   begin
     succeded := AbtoPhone.PlayFile(CaminhoSalvar);
-    if succeded = 0  then Exit;
+    if succeded = 0 then
+      Exit;
 
     Self.DisplayNotifyMessage('Now playing: ' + CaminhoSalvar);
     PlayButton.Caption := 'PlayStop';
@@ -732,7 +820,7 @@ end;
 procedure TSipPhoneForm.DisplayNotifyMessage(message: string);
 begin
   StatusLogListBox.AddItem(message, nil);
-  StatusLogListBox.ItemIndex := StatusLogListBox.Count - 1;
+  StatusLogListBox.ItemIndex := StatusLogListBox.count - 1;
   StatusLogListBox.ItemIndex := -1; // Disable selection
 end;
 
@@ -741,118 +829,142 @@ var
   k: Integer;
 begin
   ConnectionsListBox.Clear;
-  for k in lnInfo.Connections.Keys do begin
+  for k in lnInfo.Connections.Keys do
+  begin
     Self.DisplayConnection(k, lnInfo.Connections[k]);
   end;
 end;
 
-procedure TSipPhoneForm.DisplayConnection(connId: Integer; RemoteAddress: string);
+procedure TSipPhoneForm.DisplayConnection(ConnId: Integer;
+  RemoteAddress: string);
 begin
-  Self.ConnectionsListBox.AddItem(RemoteAddress, TObject(connId));
-  Self.ConnectionsListBox.ItemIndex := Self.ConnectionsListBox.Count - 1;
+  Self.ConnectionsListBox.AddItem(RemoteAddress, TObject(ConnId));
+  Self.ConnectionsListBox.ItemIndex := Self.ConnectionsListBox.count - 1;
 end;
 
-procedure TSipPhoneForm.RemoveConnection(connId: Integer);
+procedure TSipPhoneForm.RemoveConnection(ConnId: Integer);
 var
-  i, count, idx: Integer;
+  I, count, idx: Integer;
 begin
-  for i := 0 to ConnectionsListBox.Count - 1 do begin
-    idx := Integer(ConnectionsListBox.Items.Objects[i]);
-    if (idx <> connId) then continue;
+  for I := 0 to ConnectionsListBox.count - 1 do
+  begin
+    idx := Integer(ConnectionsListBox.Items.Objects[I]);
+    if (idx <> ConnId) then
+      continue;
 
-        //ConnectionsListBox.Items.Objects[i].Free;
-    ConnectionsListBox.Items.Delete(i);
+    // ConnectionsListBox.Items.Objects[i].Free;
+    ConnectionsListBox.Items.Delete(I);
     Break;
   end;
 
-  count := Self.ConnectionsListBox.Count;
-  if count >= 1 then ConnectionsListBox.ItemIndex := count - 1;
+  count := Self.ConnectionsListBox.count;
+  if count >= 1 then
+    ConnectionsListBox.ItemIndex := count - 1;
 end;
 
 procedure TSipPhoneForm.ChangeControlsState(lnInfo: PLineInfo);
 begin
   ChangeLineCaption(lnInfo);
 
-  if lnInfo.IsCallEstablished or lnInfo.IsCalling
-    then StartCallBtn.Caption := 'Hang up'
-  else StartCallBtn.Caption := 'Start call';
+  if lnInfo.IsCallEstablished or lnInfo.IsCalling then
+    StartCallBtn.Caption := 'Hang up'
+  else
+    StartCallBtn.Caption := 'Start call';
 
   Self.HoldButton.Visible := lnInfo.IsCallEstablished;
-  if lnInfo.IsCallHeld
-    then Self.HoldButton.Caption := 'Retrieve'
-  else Self.HoldButton.Caption := 'Hold';
+  if lnInfo.IsCallHeld then
+    Self.HoldButton.Caption := 'Retrieve'
+  else
+    Self.HoldButton.Caption := 'Hold';
 
   Self.TransferButton.Visible := lnInfo.IsCallEstablished;
   Self.JoinButton.Visible := lnInfo.IsCallEstablished;
 
-  Self.AddressComboBox.Enabled := not (lnInfo.IsCallEstablished or lnInfo.IsCalling);
+  Self.AddressComboBox.Enabled :=
+    not(lnInfo.IsCallEstablished or lnInfo.IsCalling);
   Self.UserInputLabel.Caption := lnInfo.UserInputString;
 end;
 
 procedure TSipPhoneForm.ChangeLineCaption(lnInfo: PLineInfo);
 var
-  text: string;
+  Text: string;
 begin
-  if lnInfo.IsCallEstablished then text := '[x]' + 'Line' + IntToStr(lnInfo.Id)
-  else text := 'Line' + IntToStr(lnInfo.Id);
+  if lnInfo.IsCallEstablished then
+    Text := '[x]' + 'Line' + IntToStr(lnInfo.Id)
+  else
+    Text := 'Line' + IntToStr(lnInfo.Id);
 
-  Self.GetLineButton(lnInfo.Id).Caption := text;
+  Self.GetLineButton(lnInfo.Id).Caption := Text;
 end;
 
-function TSipPhoneForm.GetLineButton(lineId: Integer): TButton;
+function TSipPhoneForm.GetLineButton(LineId: Integer): TButton;
 begin
-  case lineId of
-    1: Result := Self.Line1Button;
-    2: Result := Self.Line2Button;
-    3: Result := Self.Line3Button;
-    4: Result := Self.Line4Button;
-    5: Result := Self.Line5Button;
-    6: Result := Self.Line6Button;
+  case LineId of
+    1:
+      result := Self.Line1Button;
+    2:
+      result := Self.Line2Button;
+    3:
+      result := Self.Line3Button;
+    4:
+      result := Self.Line4Button;
+    5:
+      result := Self.Line5Button;
+    6:
+      result := Self.Line6Button;
   else
-    Result := Self.Line1Button;
+    result := Self.Line1Button;
   end;
 end;
 
 { event handlers }
 
-procedure TSipPhoneForm.AbtoPhone_OnInitialized(ASender: TObject; const Msg: WideString);
+procedure TSipPhoneForm.AbtoPhone_OnInitialized(ASender: TObject;
+  const Msg: WideString);
 begin
-  fStatus := '{"Evento": "OnInitialized", "Msg":"' + Msg + '", "Time":"' + TimeToStr(Now) + '" }';
-  DisplayNotifyMessage(msg);
+  fStatus := '{"Evento": "OnInitialized", "Msg":"' + Msg + '", "Time":"' +
+    TimeToStr(Now) + '" }';
+  DisplayNotifyMessage(Msg);
 
-  if ((Pos(WideString('expired'), msg) <> 0) or (Pos(WideString('Invalid'), msg) <> 0)) then
-    ActivationMenuClick(self);
+  if ((Pos(WideString('expired'), Msg) <> 0) or
+    (Pos(WideString('Invalid'), Msg) <> 0)) then
+    ActivationMenuClick(Self);
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnLineSwitched(Sender: TObject; LineId: Integer);
+procedure TSipPhoneForm.AbtoPhone_OnLineSwitched(Sender: TObject;
+  LineId: Integer);
 var
   lnInfo: PLineInfo;
 begin
-  fStatus := '{"Evento": "OnLineSwitched", "Msg":"' + IntToStr(LineId) + '" , "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnLineSwitched", "Msg":"' + IntToStr(LineId) +
+    '" , "Time":"' + TimeToStr(Now) + '" }';
   Self.CurrentLineId := LineId;
   lnInfo := Self.GetCurrentLine;
   DisplayConnectionsAll(lnInfo);
   ChangeControlsState(lnInfo);
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnEstablishedCall(ASender: TObject; const Msg: WideString; LineId: Integer);
+procedure TSipPhoneForm.AbtoPhone_OnEstablishedCall(ASender: TObject;
+  const Msg: WideString; LineId: Integer);
 var
   lnInfo: PLineInfo;
 begin
-  fStatus := '{"Evento": "OnEstablishedCall", "Msg":"' + Msg + '", "LineId": "' + IntToStr(LineId) + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnEstablishedCall", "Msg":"' + Msg + '", "LineId": "'
+    + IntToStr(LineId) + '", "Time":"' + TimeToStr(Now) + '" }';
 
   lnInfo := Self.GetLine(LineId);
   lnInfo.UserInputString := '';
-  lnInfo.IsCallEstablished := True;
+  lnInfo.IsCallEstablished := true;
   lnInfo.IsCalling := False;
   if LineId = Self.CurrentLineId then
   begin
-            //Display status
+    // Display status
     DisplayNotifyMessage(VarToStr(Msg));
-            //Cange controls state
+    // Cange controls state
     ChangeControlsState(lnInfo);
   end
-  else begin
+  else
+  begin
     ChangeLineCaption(lnInfo);
   end;
 
@@ -863,15 +975,18 @@ begin
   end;
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnIncomingCall(ASender: TObject; const AddrFrom: WideString; LineId: Integer);
+procedure TSipPhoneForm.AbtoPhone_OnIncomingCall(ASender: TObject;
+  const AddrFrom: WideString; LineId: Integer);
 var
   lnInfo: PLineInfo;
-//    incomingForm: TIncomingCallForm;
+  // incomingForm: TIncomingCallForm;
 begin
-  fStatus := '{"Evento": "OnIncomingCall", "Msg":"' + AddrFrom + '", "LineId": "' + IntToStr(LineId) + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnIncomingCall", "Msg":"' + AddrFrom +
+    '", "LineId": "' + IntToStr(LineId) + '", "Time":"' +
+    TimeToStr(Now) + '" }';
 
-    //Check autoanswer mode
-  {  if(self.isAutoAnswerEnabled) then Exit;
+  // Check autoanswer mode
+  { if(self.isAutoAnswerEnabled) then Exit;
 
     incomingForm := TIncomingCallForm.Create(Self);
     incomingForm.SetCallerLineData(VarToStr(AddrFrom), LineId);
@@ -881,19 +996,21 @@ begin
     AbtoPhone.SetCurrentLine(lineId);
 
     if incomingForm.ModalResult = mrYes
-        then AbtoPhone.AnswerCall
-        else AbtoPhone.RejectCall;
+    then AbtoPhone.AnswerCall
+    else AbtoPhone.RejectCall;
 
-    incomingForm.Free;}
+    incomingForm.Free; }
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnClearedCall(ASender: TObject; const Msg: WideString; Status: Integer; LineId: Integer);
+procedure TSipPhoneForm.AbtoPhone_OnClearedCall(ASender: TObject;
+  const Msg: WideString; Status: Integer; LineId: Integer);
 var
   lnInfo: PLineInfo;
   str: WideString;
 begin
-  fStatus := '{"Evento": "OnClearedCall", "Msg":"' + Msg
-  + '", "LineId": "' + IntToStr(LineId) + '. Status: ' + IntToStr(Status) + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnClearedCall", "Msg":"' + Msg + '", "LineId": "' +
+    IntToStr(LineId) + '. Status: ' + IntToStr(Status) + '", "Time":"' +
+    TimeToStr(Now) + '" }';
 
   lnInfo := Self.GetLine(LineId);
   lnInfo.IsCallEstablished := False;
@@ -905,21 +1022,25 @@ begin
     lnInfo.IsCallRecordStarted := not lnInfo.IsCallRecordStarted;
   end;
 
-    //Update controls (only when it's cur line event)
-  if LineId = Self.CurrentLineId then Self.ChangeControlsState(lnInfo)
-  else Self.ChangeLineCaption(lnInfo);
+  // Update controls (only when it's cur line event)
+  if LineId = Self.CurrentLineId then
+    Self.ChangeControlsState(lnInfo)
+  else
+    Self.ChangeLineCaption(lnInfo);
 
-    //Display status
-  str := VarToStr(Msg) + '. Line: ' + IntToStr(lineId) + '. Status: ' + IntToStr(Status);
+  // Display status
+  str := VarToStr(Msg) + '. Line: ' + IntToStr(LineId) + '. Status: ' +
+    IntToStr(Status);
   DisplayNotifyMessage(str);
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnToneReceived(ASender: TObject; Tone: Integer; connId: Integer;
-  LineId: Integer);
+procedure TSipPhoneForm.AbtoPhone_OnToneReceived(ASender: TObject;
+  Tone: Integer; ConnId: Integer; LineId: Integer);
 var
   lnInfo: PLineInfo;
 begin
-  fStatus := '{"Evento": "OnToneReceived", "Msg":"' + IntToStr(Tone) + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnToneReceived", "Msg":"' + IntToStr(Tone) +
+    '", "Time":"' + TimeToStr(Now) + '" }';
 
   lnInfo := Self.GetLine(LineId);
   lnInfo.UserInputString := lnInfo.UserInputString + Chr(Tone);
@@ -931,41 +1052,47 @@ begin
 
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnVolumeUpdated(Sender: TObject; IsMicrophone: Integer; Level: Integer);
+procedure TSipPhoneForm.AbtoPhone_OnVolumeUpdated(Sender: TObject;
+  IsMicrophone: Integer; Level: Integer);
 begin
-  if IsMicrophone = 0 then SoundLevelBar.Position := Level
-  else RecordLevelBar.Position := Level;
+  if IsMicrophone = 0 then
+    SoundLevelBar.Position := Level
+  else
+    RecordLevelBar.Position := Level;
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnRegistered(ASender: TObject; const Msg: WideString);
+procedure TSipPhoneForm.AbtoPhone_OnRegistered(ASender: TObject;
+  const Msg: WideString);
 begin
-  fStatus := '{"Evento": "OnRegistered", "Msg":"' + Msg + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnRegistered", "Msg":"' + Msg + '", "Time":"' +
+    TimeToStr(Now) + '" }';
   Self.DisplayNotifyMessage(Msg);
 end;
 
-
-procedure TSipPhoneForm.AbtoPhone_OnPlayFinished(ASender: TObject; const Msg: WideString);
+procedure TSipPhoneForm.AbtoPhone_OnPlayFinished(ASender: TObject;
+  const Msg: WideString);
 const
   playFinishedStr: string = 'Play Finished on Line: ';
 var
-  lineId: integer;
+  LineId: Integer;
   strMsg: string;
 begin
-  fStatus := '{"Evento": "OnPlayFinished", "Msg":"' + Msg + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnPlayFinished", "Msg":"' + Msg + '", "Time":"' +
+    TimeToStr(Now) + '" }';
   strMsg := Msg;
 
   if (Pos(playFinishedStr, strMsg) = 0) then
   begin
-    lineId := StrToInt(Copy(strMsg, Length(playFinishedStr), Length(strMsg) - Length(playFinishedStr)));
-    StopStartPlaying(true, lineId);
+    LineId := StrToInt(Copy(strMsg, Length(playFinishedStr),
+      Length(strMsg) - Length(playFinishedStr)));
+    StopStartPlaying(true, LineId);
   end;
 
   Self.DisplayNotifyMessage(Msg);
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnEstablishedConnection(ASender: TObject; const AddrFrom: WideString;
-  const AddrTo: WideString;
-  connId: Integer;
+procedure TSipPhoneForm.AbtoPhone_OnEstablishedConnection(ASender: TObject;
+  const AddrFrom: WideString; const AddrTo: WideString; ConnId: Integer;
   LineId: Integer);
 var
   lnInfo: PLineInfo;
@@ -973,80 +1100,95 @@ var
 begin
   lnInfo := Self.GetLine(LineId);
 
-  if (lnInfo.IsCalling = True) then
+  if (lnInfo.IsCalling = true) then
     addr := AddrTo
   else
     addr := AddrFrom;
 
-  lnInfo.Connections.Add(connId, addr);
+  lnInfo.Connections.Add(ConnId, addr);
 
   if LineId = Self.CurrentLineId then
-    Self.DisplayConnection(connId, addr);
+    Self.DisplayConnection(ConnId, addr);
 
-  fStatus := '{"Evento": "OnEstablishedConnection", "Msg":"' + addr + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnEstablishedConnection", "Msg":"' + addr +
+    '", "Time":"' + TimeToStr(Now) + '" }';
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnClearedConnection(Sender: TObject; connId: Integer; LineId: Integer);
+procedure TSipPhoneForm.AbtoPhone_OnClearedConnection(Sender: TObject;
+  ConnId: Integer; LineId: Integer);
 var
   lnInfo: PLineInfo;
 begin
-  fStatus := '{"Evento": "OnClearedConnection", "Msg":"' + IntToStr(LineId) + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnClearedConnection", "Msg":"' + IntToStr(LineId) +
+    '", "Time":"' + TimeToStr(Now) + '" }';
   lnInfo := Self.GetLine(LineId);
-  lnInfo.Connections.Remove(connId);
+  lnInfo.Connections.Remove(ConnId);
 
-  if lineId = Self.CurrentLineId then
-    RemoveConnection(connId);
+  if LineId = Self.CurrentLineId then
+    RemoveConnection(ConnId);
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnTextMessageReceived(ASender: TObject; const address: WideString;
-  const message: WideString);
+procedure TSipPhoneForm.AbtoPhone_OnTextMessageReceived(ASender: TObject;
+  const address: WideString; const message: WideString);
 begin
-  fStatus := '{"Evento": "OnTextMessageReceived", "Msg":"' + '"' + message + '" received from: ' + address + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnTextMessageReceived", "Msg":"' + '"' + message +
+    '" received from: ' + address + '", "Time":"' + TimeToStr(Now) + '" }';
   Self.DisplayNotifyMessage('"' + message + '" received from: ' + address);
 end;
 
-
-procedure TSipPhoneForm.AbtoPhone_OnTextMessageSentStatus(ASender: TObject; const address: WideString;
-  const reason: WideString; bSuccess: Integer);
+procedure TSipPhoneForm.AbtoPhone_OnTextMessageSentStatus(ASender: TObject;
+  const address: WideString; const reason: WideString; bSuccess: Integer);
 begin
   if (bSuccess <> 0) then
   begin
     Self.DisplayNotifyMessage('Message sent succesfully. to: ' + address);
-    fStatus := '{"Evento": "OnTextMessageSentStatus", "Msg":"' + address + '", "Time":"' + TimeToStr(Now) + '" }';
+    fStatus := '{"Evento": "OnTextMessageSentStatus", "Msg":"' + address +
+      '", "Time":"' + TimeToStr(Now) + '" }';
   end
-  else begin
-    Self.DisplayNotifyMessage('Message sent failure. to: ' + address + '. Reason: ' + reason);
-    fStatus := '{"Evento": "OnTextMessageSentStatus", "Msg":"' + address + '. Reason: ' + reason + '", "Time":"' + TimeToStr(Now) + '" }';
+  else
+  begin
+    Self.DisplayNotifyMessage('Message sent failure. to: ' + address +
+      '. Reason: ' + reason);
+    fStatus := '{"Evento": "OnTextMessageSentStatus", "Msg":"' + address +
+      '. Reason: ' + reason + '", "Time":"' + TimeToStr(Now) + '" }';
   end;
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnNotify(ASender: TObject; const Msg: WideString);
+procedure TSipPhoneForm.AbtoPhone_OnNotify(ASender: TObject;
+  const Msg: WideString);
 begin
   Self.DisplayNotifyMessage(Msg);
-  fStatus := '{"Evento": "OnNotify", "Msg":"' + Msg + '", "Time":"' + TimeToStr(Now) + '" }';
+  fStatus := '{"Evento": "OnNotify", "Msg":"' + Msg + '", "Time":"' +
+    TimeToStr(Now) + '" }';
 end;
 
 procedure TSipPhoneForm.AbtoPhone_OnRemoteAlerting(ASender: TObject;
-  connId: Integer; responseCode: Integer;
-  const reasonMsg: WideString);
+  ConnId: Integer; responseCode: Integer; const reasonMsg: WideString);
 begin
-  Self.DisplayNotifyMessage('Remote alerting: ' + IntToStr(responseCode) + ' ' + reasonMsg);
-  fStatus := '{"Evento": "OnRemoteAlerting", "Msg":"' + IntToStr(responseCode) + ' - ' + reasonMsg + '", "Time":"' + TimeToStr(Now) + '" }';
+  Self.DisplayNotifyMessage('Remote alerting: ' + IntToStr(responseCode) + ' ' +
+    reasonMsg);
+  fStatus := '{"Evento": "OnRemoteAlerting", "Msg":"' + IntToStr(responseCode) +
+    ' - ' + reasonMsg + '", "Time":"' + TimeToStr(Now) + '" }';
 end;
 
-procedure TSipPhoneForm.AbtoPhone_OnHoldCall(ASender: TObject; LineId: Integer; isHeld: Integer);
+procedure TSipPhoneForm.AbtoPhone_OnHoldCall(ASender: TObject; LineId: Integer;
+  isHeld: Integer);
 begin
   if (isHeld <> 0) then
   begin
-    Self.DisplayNotifyMessage('OnCallHold. Line: ' + IntToStr(LineId) + ' Held');
-    fStatus := '{"Evento": "OnHoldCall", "Msg":"' + IntToStr(LineId) + ' - Held ' + '", "Time":"' + TimeToStr(Now) + '" }';
+    Self.DisplayNotifyMessage('OnCallHold. Line: ' + IntToStr(LineId) +
+      ' Held');
+    fStatus := '{"Evento": "OnHoldCall", "Msg":"' + IntToStr(LineId) +
+      ' - Held ' + '", "Time":"' + TimeToStr(Now) + '" }';
   end
-  else begin
-    Self.DisplayNotifyMessage('OnCallHold. Line: ' + IntToStr(LineId) + ' Retrived');
-    fStatus := '{"Evento": "OnHoldCall", "Msg":"' + IntToStr(LineId) + ' - Retrived ' + '", "Time":"' + TimeToStr(Now) + '" }';
+  else
+  begin
+    Self.DisplayNotifyMessage('OnCallHold. Line: ' + IntToStr(LineId) +
+      ' Retrived');
+    fStatus := '{"Evento": "OnHoldCall", "Msg":"' + IntToStr(LineId) +
+      ' - Retrived ' + '", "Time":"' + TimeToStr(Now) + '" }';
   end;
 end;
-
 
 procedure TSipPhoneForm.HoldButtonClick(Sender: TObject);
 var
@@ -1054,29 +1196,30 @@ var
 begin
   lnInfo := Self.GetCurrentLine;
   Self.AbtoPhone.HoldRetrieveCurrentCall;
-  if lnInfo.IsCallHeld
-    then Self.HoldButton.Caption := 'Hold'
-  else Self.HoldButton.Caption := 'Retrieve';
+  if lnInfo.IsCallHeld then
+    Self.HoldButton.Caption := 'Hold'
+  else
+    Self.HoldButton.Caption := 'Retrieve';
   lnInfo.IsCallHeld := not lnInfo.IsCallHeld;
 end;
-
-
 
 procedure TSipPhoneForm.RecButtonClick(Sender: TObject);
 var
   lnInfo: PLineInfo;
 begin
   lnInfo := Self.GetCurrentLine;
-  if lnInfo.IsCallRecordStarted
-    then begin
+  if lnInfo.IsCallRecordStarted then
+  begin
     Self.AbtoPhone.StopRecording();
     Self.RecButton.Caption := 'Rec';
-    Self.DisplayNotifyMessage('Recording stopped'); end
-  else begin
+    Self.DisplayNotifyMessage('Recording stopped');
+  end
+  else
+  begin
     Self.SaveDialog.Filter := 'Sound Files (*.wav)|*.wav';
     Self.SaveDialog.Options := Self.SaveDialog.Options + [ofOverwritePrompt];
-    if not Self.SaveDialog.Execute
-      then Exit;
+    if not Self.SaveDialog.Execute then
+      Exit;
     Self.AbtoPhone.StartRecording(Self.SaveDialog.FileName);
     Self.RecButton.Caption := 'RecStop';
     Self.DisplayNotifyMessage('Now recording to ' + Self.SaveDialog.FileName);
@@ -1085,49 +1228,49 @@ begin
 end;
 
 procedure TSipPhoneForm.TransferButtonClick(Sender: TObject);
-//var
-//    form: TTransferForm;
+// var
+// form: TTransferForm;
 begin
- {   form := TTransferForm.Create(Self);
+  { form := TTransferForm.Create(Self);
     form.ShowModal;
     if form.ModalResult = mrOK then begin
-        Self.AbtoPhone.TransferCall(form.TransferToEdit.Text);
+    Self.AbtoPhone.TransferCall(form.TransferToEdit.Text);
     end;
-    form.Free;}
+    form.Free; }
 end;
 
 procedure TSipPhoneForm.JoinButtonClick(Sender: TObject);
-{var
-    form: TJoinForm;
-    selLineInfo, curLineInfo: PLineInfo;
-    k: Integer;
- }
+{ var
+  form: TJoinForm;
+  selLineInfo, curLineInfo: PLineInfo;
+  k: Integer;
+}
 begin
-  {form := TJoinForm.Create(Self);
- form.SetCurrentLineId(Self.CurrentLineId);
- form.ShowModal;
- if (form.ModalResult <> mrOK) or (form.GetSelectedLineId = Self.CurrentLineId) then begin
-  form.Free;
-  Exit;
- end;
+  { form := TJoinForm.Create(Self);
+    form.SetCurrentLineId(Self.CurrentLineId);
+    form.ShowModal;
+    if (form.ModalResult <> mrOK) or (form.GetSelectedLineId = Self.CurrentLineId) then begin
+    form.Free;
+    Exit;
+    end;
 
- ShowMessage(IntToStr(form.GetSelectedLineId));
- selLineInfo := Self.GetLine(form.GetSelectedLineId + 1);
- curLineInfo := Self.GetCurrentLine;
- if not selLineInfo.IsCallEstablished then begin
-  form.Free;
-  Exit;
- end;
+    ShowMessage(IntToStr(form.GetSelectedLineId));
+    selLineInfo := Self.GetLine(form.GetSelectedLineId + 1);
+    curLineInfo := Self.GetCurrentLine;
+    if not selLineInfo.IsCallEstablished then begin
+    form.Free;
+    Exit;
+    end;
 
 
-   for k in selLineInfo.Connections.Keys do begin
-        curLineInfo.Connections.Add(k, selLineInfo.Connections[k])
-   end;
+    for k in selLineInfo.Connections.Keys do begin
+    curLineInfo.Connections.Add(k, selLineInfo.Connections[k])
+    end;
 
- selLineInfo.Connections.Clear;
- DisplayConnectionsAll(curLineInfo);
- AbtoPhone.JoinToCurrentCall(form.GetSelectedLineId);
- form.Free;}
+    selLineInfo.Connections.Clear;
+    DisplayConnectionsAll(curLineInfo);
+    AbtoPhone.JoinToCurrentCall(form.GetSelectedLineId);
+    form.Free; }
 end;
 
 procedure TSipPhoneForm.buttonExpandClick(Sender: TObject);
@@ -1137,13 +1280,15 @@ begin
   deltaWidth := CallPanel.Left;
   if Self.Width > CallPanel.Width + 2 * deltaWidth then
   begin
-      //Straiten
+    // Straiten
     Self.Width := CallPanel.Width + 2 * deltaWidth;
     buttonExpand.Caption := '>>';
-  end else
+  end
+  else
   begin
-      //Expand
-    Self.Width := pictureReceivedVideo.Width + pictureReceivedVideo.Left + deltaWidth;
+    // Expand
+    Self.Width := pictureReceivedVideo.Width + pictureReceivedVideo.Left +
+      deltaWidth;
     buttonExpand.Caption := '<<';
   end;
 
@@ -1152,27 +1297,43 @@ begin
 end;
 
 procedure TSipPhoneForm.SendTextButtonClick(Sender: TObject);
-{var
-    sendTextForm: TSendTextForm;
-    sendAsUnicode : integer;}
+{ var
+  sendTextForm: TSendTextForm;
+  sendAsUnicode : integer; }
 begin
-    {Application.CreateForm(TSendTextForm, sendTextForm);
+  { Application.CreateForm(TSendTextForm, sendTextForm);
 
     sendTextForm.AddrEdit.Text := self.AddressComboBox.Text;
     sendTextForm.ShowModal;
 
     if (sendTextForm.ModalResult = mrOk) and
-       (sendTextForm.AddrEdit.Text <> '') and
-       (sendTextForm.MessageEdit.Text <> '')  then
+    (sendTextForm.AddrEdit.Text <> '') and
+    (sendTextForm.MessageEdit.Text <> '')  then
     begin
-        if(sendTextForm.UnicodeCheckBox.Checked=true) then sendAsUnicode := 1 else sendAsUnicode := 0;
+    if(sendTextForm.UnicodeCheckBox.Checked=true) then sendAsUnicode := 1 else sendAsUnicode := 0;
 
-        self.AbtoPhone.SendTextMessage(sendTextForm.AddrEdit.Text,
-                                      sendTextForm.MessageEdit.Text,
-                                      sendAsUnicode);
+    self.AbtoPhone.SendTextMessage(sendTextForm.AddrEdit.Text,
+    sendTextForm.MessageEdit.Text,
+    sendAsUnicode);
 
     end;
-    sendTextForm.Free;}
+    sendTextForm.Free; }
+end;
+
+class function TSipPhoneForm.SendTone(pTecla: WideString): WideString;
+begin
+  try
+    result := '0';
+    SipPhoneForm.SendTone(pTecla);
+    result := '1';
+  except
+    on E: Exception do
+    begin
+      Status('{"Evento": "Erro", "Msg":"' + E.message + '", "Time":"' +
+        TimeToStr(Now) + '" }');
+    end;
+  end;
+
 end;
 
 procedure TSipPhoneForm.setStatus(const Value: WideString);
@@ -1182,4 +1343,3 @@ begin
 end;
 
 end.
-

@@ -43,6 +43,16 @@ begin
   Result := TSipPhoneForm.Transferir(pParam);
 end;
 
+function SendTone(pParam: WideString): WideString; stdcall;
+begin
+  Result := TSipPhoneForm.SendTone(pParam);
+end;
+
+function Esperar(pParam: WideString): WideString; stdcall;
+begin
+  Result := TSipPhoneForm.Esperar(pParam);
+end;
+
 function AutoFalante(pParam: WideString): WideString; stdcall;
 begin
   Result := TSipPhoneForm.AutoFalante(pParam);
